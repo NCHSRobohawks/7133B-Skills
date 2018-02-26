@@ -5,10 +5,14 @@
 void leftD(int vel){
   motorSet(DRIVEL1, vel);
   motorSet(DRIVEL2, vel);
+  motorSet(DRIVEL3, vel);
+  motorSet(DRIVEL4, vel);
 }
 void rightD(int vel){
   motorSet(DRIVER1, vel);
   motorSet(DRIVER2, vel);
+  motorSet(DRIVER3, vel);
+  motorSet(DRIVER4, vel);
 }
 void drive(int vel){
   rightD(-vel);

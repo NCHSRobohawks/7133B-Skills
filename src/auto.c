@@ -1,58 +1,16 @@
 #include "main.h"
-#include "lift.h"
-#include "arm.h"
 #include "scoop.h"
 #include "drive.h"
-#include "claw.h"
 #include "ports.h"
 #include "sensorTargets.h"
 
-//PID targets
-static int liftTarget = 0;
-static int armTarget = 0;
-static int clawTarget = -1000;
-
-//PID tasks
-void liftTask(){
-  liftPID(liftTarget);
-}
-void armTask(){
-  armPID(armTarget);
-}
-void clawTask(){
-  clawGrip(clawTarget);
-}
 
 //drive to pylon program =======================================
 void pickUp(){
-  clawTarget = 127; // close claw
-  armTarget = AP_AUTO; // raise arm
-  liftTarget = LP_BOT;
   drive(127);
   autoScoop(0); // deploy scoop
   sonarDrive(); //go get pylon
   autoScoop(1); // bring scoop up
-  liftTarget = LP_LOW;
-  armTarget = AP_FRONT; // drop arm to score cone
-}
-
-// program 1 ===============================================================
-void pylon5() {
-
-  pickUp(); //drive to pylon
-  autoDrive(-700);
-
-  //cone drop
-  clawTarget = -127; // open claw
-  while(analogRead(CLAWPOT) > CP_OPEN) delay(20);
-  armTarget = AP_AUTO;
-  liftTarget = LP_BOT;
-
-  gyTurn(-180);//face the zone
-  autoScoop(0);
-
-  //reverse out of zone
-  autoDrive(-300);
 }
 
 
@@ -65,11 +23,6 @@ void pylon20(){
   autoDrive(210);
   gyTurn(-213);
 
-  //cone drop
-  clawTarget = -127; // open claw
-  while(analogRead(CLAWPOT) > CP_OPEN) delay(20);
-  armTarget = AP_AUTO;
-  liftTarget = LP_BOT;
 
   drive(127);
   scoop(-127);
@@ -232,55 +185,10 @@ void ram(){
   autoDrive(5000);
 }
 
-void tower(){
-  clawTarget = 127;
-  delay(500);
-  liftTarget = LP_LOW + 200;
-  autoDrive(-600);
-  drive(60);
-  delay(300);
-  armTarget = AP_STACK + 200;
-  delay(700);
-  armTarget = AP_STACK;
-  clawTarget = -127;
-  delay(500);
-  autoDrive(600);
-  delay(500);
-}
 
 // control center ===============================================================
 void autonomous() {
   gyroReset(gyro);
-  liftTarget = analogRead(LIFTPOT); // calibrate the PID starting values
-  armTarget = analogRead(ARMPOT);
-
-  //start all tasks
-  TaskHandle aHandle = taskRunLoop(armTask, 20); //start arm
-  TaskHandle lHandle = taskRunLoop(liftTask, 20); //start lift
-  TaskHandle cHandle = taskRunLoop(clawTask, 20); //start claw
-
-  switch(auton){
-    case -1:
-      //autoRight = true;
-      skills();
-      break;
-    case 0:
-      //autoDrive(300);
-      break; //dont run auton
-    case 1:
-      pylon5();
-      break;
-    case 2:
-      pylon20();
-      break;
-    case 3:
-      tower();
-      break;
-  }
-
-  //stop all tasks
-  taskDelete(lHandle);
-  taskDelete(aHandle);
-  taskDelete(cHandle);
+  skills();
   motorStopAll();
 }
