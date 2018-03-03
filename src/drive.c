@@ -54,7 +54,7 @@ void autoDrive(int sp){
   encoderReset(driveEncLeft);
   encoderReset(driveEncRight);
 
-  double kp = 0.6;
+  double kp = 0;
   int kc = 60;
   int brake = -60;
   int dir = 1; //forward

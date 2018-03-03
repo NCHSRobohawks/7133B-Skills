@@ -8,8 +8,8 @@
 #define DRIVEL2 3
 #define DRIVER1 4
 #define DRIVER2 5
-#define DRIVERL3 6
-#define DRIVERL4 7
+#define DRIVEL3 6
+#define DRIVEL4 7
 #define DRIVER3 8
 #define DRIVER4 9
 #define MOGO2 10

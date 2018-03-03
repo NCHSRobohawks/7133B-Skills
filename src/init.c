@@ -2,8 +2,6 @@
 #include "ports.h"
 
 void initializeIO() {
-  //led port
-  pinMode(LED, OUTPUT_OD);
 }
 
 
@@ -28,10 +26,6 @@ void initialize() {
   //expander light check
 	while(analogRead(EXPANDER) < 500){
     lcdSetText(uart1, 1, "!Check Pwr Exp!");
-		digitalWrite(LED, LOW);
-		delay(500);
-		digitalWrite(LED, HIGH);
-		delay(500);
 	}
 
   int selected = 0; //layered selection
